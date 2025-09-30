@@ -1,0 +1,9 @@
+[user]
+	name = wei.li
+	email = lw20001208@gmail.com
+[url "https://ghfast.top/https://github.com/"]
+    insteadOf = https://github.com/
+[init]
+	defaultBranch = main
+[credential]
+	helper = store
