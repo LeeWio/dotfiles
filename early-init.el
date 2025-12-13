@@ -1,5 +1,4 @@
 ;;; early-init.el --- Emacs 启动早期优化
-;; 禁用不需要的启动功能来提高性能
 
 ;; 禁用包管理系统直到我们准备好了
 (setq package-enable-at-startup nil)
@@ -13,7 +12,22 @@
 (setq frame-inhibit-implied-resize t)
 (setq inhibit-splash-screen t)
 (setq inhibit-startup-message t)
+(setq inhibit-startup-echo-area-message t)
+(setq inhibit-startup-screen t)
 
 ;; 优化 GC 以加速启动
-(setq gc-cons-threshold 100000000)  ;; 100MB
-(setq read-process-output-max (* 1024 1024))  ;; 1MB
+(setq gc-cons-threshold most-positive-fixnum)  ;; 启动时禁用GC
+(setq gc-cons-percentage 0.6)
+
+;; 增加读取进程输出的最大值
+(setq read-process-output-max (* 3 1024 1024))  ;; 3MB
+
+;; 禁用不必要的功能
+(setq inhibit-compacting-font-caches t)
+(setq frame-resize-pixelwise t)
+(setq window-resize-pixelwise t)
+
+;; 减少启动时的正则表达式查找
+(setq auto-mode-case-fold nil)
+
+;;; early-init.el ends here

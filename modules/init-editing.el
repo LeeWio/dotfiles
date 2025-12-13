@@ -10,6 +10,22 @@
 ;; 括号匹配
 (show-paren-mode 1)
 (setq show-paren-delay 0)
+;; 优化括号匹配样式
+(setq show-paren-style 'mixed)  ; 使用混合样式
+(setq show-paren-when-point-inside-paren t)
+(setq show-paren-when-point-in-periphery t)
+
+;; 自定义括号匹配面属性
+(with-eval-after-load 'paren
+  (set-face-attribute 'show-paren-match nil
+                      :background "#45475a"
+                      :foreground "#cdd6f4"
+                      :weight 'bold
+                      :box '(:line-width 1 :color "#89b4fa"))
+  (set-face-attribute 'show-paren-mismatch nil
+                      :background "#f38ba8"
+                      :foreground "#1e1e2e"
+                      :weight 'bold))
 
 ;; 自动换行
 (global-visual-line-mode 1)

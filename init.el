@@ -1,17 +1,14 @@
 ;;; init.el --- 主配置入口
-;; 第一阶段：设置基本环境
 
-;; 记录开始时间用于性能分析
+;; 记录启动时间
 (defvar my/init-start-time (current-time)
   "记录Emacs初始化开始时间。")
 
-;; 设置包管理目录
+;; 包管理配置
 (setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
-
-;; 初始化包管理系统
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("gnu" . "https://elpa.gnu.org/packages/")))
 (package-initialize)
 
 ;; 确保 use-package 已安装
@@ -22,55 +19,63 @@
 ;; 配置 use-package
 (eval-when-compile
   (require 'use-package))
-(setq use-package-always-defer t)        ;; 默认延迟加载
-(setq use-package-expand-minimally t)    ;; 减少宏扩展
-(setq use-package-enable-imenu-support t)
+(setq use-package-always-defer t
+      use-package-expand-minimally t
+      use-package-enable-imenu-support t
+      use-package-compute-statistics nil)  ;; 禁用统计以提升性能
 
-;; 第二阶段：加载核心模块
-;; 加载性能分析工具
+;; 性能优化设置
+(setq auto-save-default nil)  ;; 禁用自动保存（使用手动保存）
+(setq create-lockfiles nil)  ;; 禁用锁文件
+(setq make-backup-files t)   ;; 保留备份文件
+(setq vc-follow-symlinks t)  ;; 自动跟随符号链接
+(setq large-file-warning-threshold 100000000)  ;; 100MB 大文件警告
+
+;; 添加 modules 到 load-path
+(add-to-list 'load-path (expand-file-name "modules" user-emacs-directory))
+
+;; 加载核心模块
 (load (expand-file-name "core/init-benchmark.el" user-emacs-directory) t)
-
-;; 加载基本变量
 (load (expand-file-name "core/init-vars.el" user-emacs-directory) t)
 
- ;; 第三阶段：设置延迟加载                                                                                                                                                      
- (defvar my/modules-to-load
-   '(("modules/init-ui.el" . t)           ;; 启动时加载                                                                                                                         
-     ("modules/init-editing.el" . nil)    ;; 延迟加载                                                                                                                           
-     ("modules/init-keybindings.el" . nil)
-     ("modules/init-packages.el" . nil)
-     ("extensions/compile-config.el" . nil))
-   "模块列表及其加载时机。t表示启动时加载，nil表示延迟加载")
+;; 立即加载的模块（启动时必需）
+(dolist (module '("modules/init-ui.el"
+                  "modules/init-modeline.el"
+                  "modules/init-packages.el"
+                  "modules/init-java.el"
+                  "modules/init-typescript.el"
+                  "modules/init-lang.el"
+                  "modules/init-markdown.el"
+                  "modules/init-org.el"))
+  (load (expand-file-name module user-emacs-directory) t))
 
-;; 延迟加载非关键模块
-(defun my/load-modules ()
-  "加载所有配置模块。"
-  (dolist (module my/modules-to-load)
-    (let ((file (car module))
-          (eager (cdr module)))
-      (if eager
-          (progn
-            (message "立即加载: %s" file)
-            (load (expand-file-name file user-emacs-directory) t))
-        (run-with-idle-timer
-         0.1 nil
-         (lambda (f)
-           (load f t))
-         (expand-file-name file user-emacs-directory))))))
+;; 延迟加载的模块
+(defvar my/deferred-modules
+  '("modules/init-editing.el"
+    "modules/init-keybindings.el"
+    "extensions/compile-config.el")
+  "延迟加载的模块列表")
 
-;; 第四阶段：启动后清理
+;; 启动后初始化
 (defun my/post-init-setup ()
   "启动后优化设置。"
-  ;; 恢复正常的GC阈值
-  (setq gc-cons-threshold (* 2 1000 1000))
-  ;; 运行垃圾回收
-  (garbage-collect)
-  ;; 显示启动时间
+  ;; 恢复正常的GC阈值（启动完成后）
+  (setq gc-cons-threshold (* 16 1024 1024))  ;; 16MB
+  (setq gc-cons-percentage 0.1)
+  
+  ;; 运行一次GC清理
+  (run-with-idle-timer 2 nil #'garbage-collect)
+  
   (message "Emacs启动完成，耗时: %.2f秒" (my/elapsed-time))
-  ;; 加载模块
-  (my/load-modules))
+  
+  ;; 延迟加载非关键模块
+  (dolist (module my/deferred-modules)
+    (run-with-idle-timer
+     0.5 nil
+     (lambda (f)
+       (load f t))
+     (expand-file-name module user-emacs-directory))))
 
-;; 在启动完成后运行清理
 (add-hook 'emacs-startup-hook #'my/post-init-setup)
 
 ;; 加载本地配置（如果存在）
@@ -83,10 +88,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(catppuccin-theme)))
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(mode-line ((t (:background unspecified :box nil))))
+ '(mode-line-inactive ((t (:background unspecified :box nil)))))
