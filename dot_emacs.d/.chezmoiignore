@@ -1,0 +1,103 @@
+# chezmoi 忽略文件
+
+# 包管理
+elpa/
+.cache/
+straight/
+eln-cache/
+
+# 备份和自动保存
+backup/
+auto-save/
+auto-save-list/
+*~
+*.~
+\#*\#
+.\#*
+
+# 编译文件
+*.elc
+*.eln
+
+# 本地配置
+config/
+
+# LSP 缓存和服务器
+.lsp-session-*
+.lsp/
+workspace/
+eclipse.jdt.ls/
+
+# Projectile
+.projectile
+projectile-bookmarks.eld
+projectile.cache
+
+# Recentf
+recentf
+recentf~
+
+# Bookmarks
+bookmarks
+places
+
+# 临时文件
+*.log
+*.tmp
+.DS_Store
+*.swp
+*.swo
+
+# Emacs 自动生成
+.mc-lists.el
+smex-items
+ido.last
+.last-package-update-day
+
+# Transient
+transient/
+
+# URL 缓存
+url/
+
+# Eshell
+eshell/
+
+# Network Security
+network-security.data
+
+# Org mode
+.org-id-locations
+org-clock-save.el
+
+# TRAMP
+tramp
+.tramp_history
+
+# Session
+session.*
+.session
+
+# Quelpa
+quelpa/
+
+# var 目录
+var/
+
+# Lombok
+lombok.jar
+
+# LSP 服务器
+.jdtls/
+.metals/
+node_modules/
+
+# Git 目录
+.git/
+
+# 安全警告相关的文件和目录
+**/tailwindServer.js
+**/yasnippet-snippets-*/*/*
+**/org.eclipse.jdt.core/*.index
+**/.metadata/**
+**/easycrypt-mode/tactics/conseq*
