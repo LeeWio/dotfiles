@@ -14,6 +14,8 @@
 
 ;; 高亮当前行
 (global-hl-line-mode 1)
+;; 设置更浅的当前行高亮颜色 (使用 Catppuccin surface1 颜色)
+(set-face-background 'hl-line "#45475a")
 
 ;; 显示列号
 (setq column-number-mode t)
