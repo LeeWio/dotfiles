@@ -1,0 +1,12 @@
+# 忽略包目录
+elpa/
+
+# 忽略备份文件
+backup/
+auto-save/
+
+# 忽略本地配置
+config/
+
+# 忽略编译文件
+*.elc
