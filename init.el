@@ -1,86 +1,98 @@
-;;; init.el --- 主配置入口
+;;; init.el --- Emacs 配置入口文件
 
-;; 记录启动时间
-(defvar my/init-start-time (current-time)
-  "记录Emacs初始化开始时间。")
+;; Copyright (C) 2025 Wei Li
 
-;; 包管理配置
-(setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
-(require 'package)
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("gnu" . "https://elpa.gnu.org/packages/")))
-(package-initialize)
+;; Author: Wei Li
+;; Version: 1.0
+;; Keywords: convenience
 
-;; 确保 use-package 已安装
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+;; 本文件是您 Emacs 配置的入口点
+;; 它会加载各个模块化配置文件
 
-;; 配置 use-package
-(eval-when-compile
-  (require 'use-package))
-(setq use-package-always-defer t
-      use-package-expand-minimally t
-      use-package-enable-imenu-support t
-      use-package-compute-statistics nil)  ;; 禁用统计以提升性能
+;;; Commentary:
 
-;; 性能优化设置
-(setq auto-save-default nil)  ;; 禁用自动保存（使用手动保存）
-(setq create-lockfiles nil)  ;; 禁用锁文件
-(setq make-backup-files t)   ;; 保留备份文件
-(setq vc-follow-symlinks t)  ;; 自动跟随符号链接
-(setq large-file-warning-threshold 100000000)  ;; 100MB 大文件警告
+;; 这是一个模块化的 Emacs 配置框架
+;; 每个功能模块都有独立的配置文件，便于维护和调试
+;; 配置按需加载，优化启动性能
 
-;; 添加 modules 到 load-path
-(add-to-list 'load-path (expand-file-name "modules" user-emacs-directory))
+;;; Code:
 
-;; 加载核心模块
-(load (expand-file-name "core/init-benchmark.el" user-emacs-directory) t)
-(load (expand-file-name "core/init-vars.el" user-emacs-directory) t)
+;; 性能优化：延迟加载非必要功能
+(defvar file-name-handler-alist-old file-name-handler-alist)
+(setq file-name-handler-alist nil)
 
-;; 立即加载的模块（启动时必需）
-(dolist (module '("modules/init-ui.el"
-                  "modules/init-modeline.el"
-                  "modules/init-packages.el"
-                  "modules/init-java.el"
-                  "modules/init-typescript.el"
-                  "modules/init-lang.el"
-                  "modules/init-markdown.el"
-                  "modules/init-org.el"))
-  (load (expand-file-name module user-emacs-directory) t))
+;; 设置垃圾回收阈值以提高启动速度
+(setq gc-cons-threshold (* 100 1024 1024)) ; 100MB
+(setq gc-cons-percentage 0.6)
 
-;; 延迟加载的模块
-(defvar my/deferred-modules
-  '("modules/init-editing.el"
-    "modules/init-keybindings.el"
-    "extensions/compile-config.el")
-  "延迟加载的模块列表")
+;; 禁用不必要的警告和消息
+(setq warning-suppress-log-types '((comp) (bytecomp)))
+(setq native-comp-async-report-warnings-errors 'silent)
+(setq inhibit-startup-message t)
+(setq initial-scratch-message nil)
 
-;; 启动后初始化
-(defun my/post-init-setup ()
-  "启动后优化设置。"
-  ;; 恢复正常的GC阈值（启动完成后）
-  (setq gc-cons-threshold (* 16 1024 1024))  ;; 16MB
-  (setq gc-cons-percentage 0.1)
-  
-  ;; 运行一次GC清理
-  (run-with-idle-timer 2 nil #'garbage-collect)
-  
-  (message "Emacs启动完成，耗时: %.2f秒" (my/elapsed-time))
-  
-  ;; 延迟加载非关键模块
-  (dolist (module my/deferred-modules)
-    (run-with-idle-timer
-     0.5 nil
-     (lambda (f)
-       (load f t))
-     (expand-file-name module user-emacs-directory))))
+;; 保存初始加载时间
+(defvar emacs-start-time (current-time))
 
-(add-hook 'emacs-startup-hook #'my/post-init-setup)
+;; 添加自定义目录到加载路径
+(add-to-list 'load-path "~/.emacs.d/config")
+(add-to-list 'load-path "~/.emacs.d/config/languages")
 
-;; 加载本地配置（如果存在）
-(when (file-exists-p (expand-file-name "config/local-settings.el" user-emacs-directory))
-  (load (expand-file-name "config/local-settings.el" user-emacs-directory) t))
+;; 禁用包加载时的初始化以提升性能
+(setq package-enable-at-startup nil)
+
+;; 包管理配置（主题需要优先加载）
+(require 'init-packages)    ; 包管理器
+
+;; 核心配置模块
+;; (require 'init-core)        ; 基础配置
+
+;; 界面配置模块
+(require 'init-ui)          ; 用户界面
+
+;; 编辑配置模块
+(require 'init-editing)     ; 编辑增强
+
+;; 快捷键配置模块
+;; (require 'init-keybindings) ; 键绑定
+
+;; 编程语言支持模块
+(require 'init-languages)   ; 语言支持
+
+;; 补全系统模块
+(require 'init-completion)  ; 补全系统
+
+;; 滚动配置模块
+(require 'init-scrolling)   ; 滚动增强
+
+;; Git 集成模块
+(require 'init-git)         ; Git 集成
+
+;; 工具配置模块
+;; (require 'init-tools)       ; 实用工具
+
+;; 项目管理模块
+;; (require 'init-project)     ; 项目管理
+
+;; 自定义配置（最后加载）
+;; (require 'init-local)       ; 本地个性化配置
+
+;; 恢复文件处理器和垃圾回收设置
+(run-with-idle-timer
+ 5 nil
+ (lambda ()
+   (setq file-name-handler-alist file-name-handler-alist-old)
+   (setq gc-cons-threshold (* 20 1024 1024)) ; 恢复为 20MB
+   (setq gc-cons-percentage 0.1)))
+
+;; 显示启动时间
+(add-hook 'after-init-hook
+          (lambda ()
+            (let ((elapsed (float-time (time-subtract (current-time)
+                                                      emacs-start-time))))
+              (message "Emacs 启动完成，耗时 %.3fs" elapsed))))
+
+(provide 'init)
 
 ;;; init.el ends here
 (custom-set-variables
@@ -94,5 +106,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(mode-line ((t (:background unspecified :box nil))))
- '(mode-line-inactive ((t (:background unspecified :box nil)))))
+ )
