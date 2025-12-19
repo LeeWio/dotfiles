@@ -1,0 +1,84 @@
+# Emacs 模块化配置结构说明
+
+## 配置哲学
+
+采用高度模块化的设计，每个功能点都有独立的配置文件，便于维护和修改。
+
+## 配置目录结构
+
+```
+config/
+├── init-ui.el              # UI配置入口文件
+├── init-completion.el      # 补全系统配置
+├── init-scrolling.el       # 滚动配置
+├── init-linenumbers.el     # 行号显示配置
+├── init-hl-line.el         # 当前行高亮配置
+├── init-interface.el       # 界面元素配置
+├── init-cursor.el          # 光标配置
+├── init-frame-title.el     # 标题栏配置
+├── init-modeline.el        # 状态栏配置
+├── init-indentation.el     # 缩进配置
+├── init-column-number.el   # 列号显示配置
+├── init-editing.el         # 编辑增强配置
+├── init-languages.el       # 语言支持配置入口
+├── init-packages.el        # 包管理配置
+├── languages/              # 各语言独立配置文件
+│   ├── init-lang-cpp.el
+│   ├── init-lang-python.el
+│   ├── init-lang-js.el
+│   └── init-lang-go.el
+└── ...
+```
+
+## 模块化优势
+
+### 1. **独立性**
+- 每个配置文件只关注单一功能
+- 修改一个模块不影响其他模块
+- 便于定位和解决问题
+
+### 2. **可维护性**
+- 功能清晰分离
+- 易于理解和修改
+- 降低配置复杂度
+
+### 3. **可扩展性**
+- 添加新功能只需创建新文件
+- 移除功能只需删除对应文件
+- 便于版本控制
+
+## 核心模块说明
+
+### UI 相关模块
+- `init-linenumbers.el`: 行号显示
+- `init-hl-line.el`: 当前行高亮
+- `init-interface.el`: 界面元素隐藏
+- `init-cursor.el`: 光标样式
+- `init-frame-title.el`: 标题栏格式
+- `init-modeline.el`: 状态栏样式
+- `init-indentation.el`: 缩进设置
+- `init-column-number.el`: 列号显示
+
+### 功能模块
+- `init-completion.el`: 补全系统
+- `init-scrolling.el`: 滚动行为
+- `init-editing.el`: 编辑增强
+- `init-languages.el`: 语言支持
+
+## 使用建议
+
+### 修改特定功能
+1. 找到对应的配置文件
+2. 修改相关设置
+3. 重启 Emacs 使配置生效
+
+### 添加新功能
+1. 创建新的配置文件
+2. 在入口文件中添加 `(require 'new-module)`
+3. 测试功能
+
+### 移除功能
+1. 注释掉入口文件中的 `(require 'module)` 
+2. 或删除对应的配置文件
+
+这种模块化设计确保了配置的清晰性和可维护性，让您能够精准地控制 Emacs 的每个方面。

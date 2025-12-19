@@ -1,0 +1,36 @@
+# 编程语言配置模块
+
+这是一个模块化的编程语言配置系统，每种语言都有独立的配置文件。
+
+## 目录结构
+
+```
+languages/
+├── init-lang-cpp.el      # C/C++ 配置
+├── init-lang-python.el   # Python 配置
+├── init-lang-js.el       # JavaScript/TypeScript 配置
+└── ...
+```
+
+## 设计原则
+
+1. **模块化** - 每种语言独立配置，互不影响
+2. **可扩展** - 易于添加新语言支持
+3. **按需加载** - 只有在使用对应语言时才加载相关配置
+4. **性能优化** - 避免不必要的包加载
+
+## 添加新语言支持
+
+1. 创建新的配置文件: `init-lang-[language].el`
+2. 在文件中配置相关包和设置
+3. 在 `init-languages.el` 中添加 `(require 'init-lang-[language])`
+
+## 当前支持的语言
+
+- C/C++ (LSP + clang-format)
+- Python (基础配置)
+- JavaScript/TypeScript (LSP)
+
+## 使用方法
+
+配置会自动根据文件扩展名加载相应的语言支持。
