@@ -76,12 +76,23 @@
   (add-to-list 'completion-at-point-functions #'cape-dict)
   (add-to-list 'completion-at-point-functions #'cape-elisp-symbol))
 
+;; Eldoc-box for better documentation display
+(use-package eldoc-box
+  :ensure t
+  :hook (eglot-managed-mode . eldoc-box-hover-at-point-mode))
+
 ;; Ensure eglot works with corfu
 (with-eval-after-load 'eglot
-  (add-hook 'eglot-managed-mode-hook
-            (lambda ()
-              ;; Add eglot completion backend
-              (add-to-list 'completion-at-point-functions #'eglot-completion-at-point))))
+  ;; Make sure eglot's completion function is added to the front of the list
+  (defun my/eglot-corfu-setup ()
+    "Setup eglot completion with corfu."
+    (add-hook 'eglot-managed-mode-hook
+              (lambda ()
+                ;; Add eglot completion backend at the beginning of the list
+                (add-to-list 'completion-at-point-functions 
+                             #'eglot-completion-at-point nil t))))
+  
+  (add-hook 'eglot-mode-hook 'my/eglot-corfu-setup))
 
 (provide 'corfu-config)
 ;;; corfu-config.el ends here

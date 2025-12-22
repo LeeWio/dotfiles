@@ -31,6 +31,10 @@
   (setq-local eglot-events-buffer-size 0)  ; Disable events buffer for performance
   (setq-local eglot-sync-connect nil)      ; Connect asynchronously
   (setq-local eglot-autoshutdown t)        ; Shutdown server when buffer is killed
+  
+  ;; Enable company-capf for better completion integration
+  (setq-local completion-at-point-functions 
+              (cons #'eglot-completion-at-point completion-at-point-functions))
   )
 
 ;; Apply C/C++ specific settings

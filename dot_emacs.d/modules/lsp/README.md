@@ -9,6 +9,7 @@ Install the following packages using your system package manager or via Emacs pa
 1. **Corfu** - Modern completion UI
 2. **Orderless** - Flexible completion matching
 3. **Cape** - Completion At Point Extensions
+4. **Eldoc-box** - Enhanced documentation display
 
 Note: Eglot is built into Emacs 29+, so no additional installation is required.
 
@@ -30,7 +31,7 @@ brew install llvm
 - `C-c g` - Go to definition
 - `C-c b` - Go to declaration
 - `C-c p` - Find references
-- `C-c h` - Show documentation
+- `C-c h` - Show documentation (hover)
 - `C-c i` - Find implementation
 - `C-c f` - Format code
 - `C-c a` - Code actions
@@ -40,6 +41,16 @@ brew install llvm
 - `S-TAB` - Previous completion
 - `M-d` - Toggle documentation popup
 - `M-l` - Show location
+
+## Completion System Features
+
+The completion system combines several technologies for an optimal experience:
+
+1. **Corfu** - Provides a clean, modern completion UI
+2. **Orderless** - Enables flexible, multi-pattern matching
+3. **Cape** - Adds various completion sources (dictionaries, file paths, etc.)
+4. **Eglot** - Provides LSP-based intelligent code completion
+5. **Eldoc-box** - Shows documentation in an overlay
 
 ## Performance Features
 
