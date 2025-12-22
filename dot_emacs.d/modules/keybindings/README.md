@@ -79,6 +79,33 @@ This configuration provides a comprehensive set of keybindings to enhance your E
 - `C-c k s r` - Query replace (`query-replace`)
 - `C-c k s f` - Find grep (`find-grep`)
 
+## Text Selection
+
+### Progressive Selection (`C-=` and `C--`)
+Using expand-region for smart selection:
+- `C-=` - Expand selection outward (character → word → line → paragraph → function)
+- `C--` - Contract selection inward
+
+### Visual Selection with Avy
+- `C-c SPC` - Avy character selection (type characters to jump anywhere)
+- `C-c j` - Avy line selection (type line number to jump)
+
+### Rectangle Selection
+- `C-x SPC` - Start rectangle selection mode
+
+### Smart Movement with Selection
+- `S-<right>` - Select next character
+- `S-<left>` - Select previous character
+- `S-C-<right>` - Select next word
+- `S-C-<left>` - Select previous word
+- `S-C-<up>` - Select previous line
+- `S-C-<down>` - Select next line
+
+### Quick Selection Helpers
+- `C-c s l` - Select current line
+- `C-c s p` - Select current paragraph
+- `C-c s f` - Select current function
+
 ## Global Keybindings
 
 ### Window Navigation

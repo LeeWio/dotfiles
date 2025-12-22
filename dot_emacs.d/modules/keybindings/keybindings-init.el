@@ -11,6 +11,12 @@
   :bind (("C-c SPC" . avy-goto-char-timer)
          ("C-c j" . avy-goto-line)))
 
+;; Install expand-region for progressive selection
+(use-package expand-region
+  :ensure t
+  :bind (("C-=" . er/expand-region)
+         ("C--" . er/contract-region)))
+
 ;; MWIM is built into Emacs 29+
 (unless (featurep 'mwim)
   (autoload 'mwim-beginning-of-line "mwim" nil t)
@@ -120,6 +126,33 @@
 
 ;; Quick save
 (global-set-key (kbd "C-x C-s") 'save-buffer)
+
+;; ==================== TEXT SELECTION ====================
+
+;; Selection helpers
+(defun my/select-line ()
+  "Select current line."
+  (interactive)
+  (beginning-of-line)
+  (push-mark (point) nil t)
+  (end-of-line))
+
+(defun my/select-paragraph ()
+  "Select current paragraph."
+  (interactive)
+  (mark-paragraph)
+  (exchange-point-and-mark))
+
+(defun my/select-function ()
+  "Select current function (if supported by mode)."
+  (interactive)
+  (mark-defun)
+  (exchange-point-and-mark))
+
+;; Bind selection helpers to global keys
+(global-set-key (kbd "C-c s l") 'my/select-line)
+(global-set-key (kbd "C-c s p") 'my/select-paragraph)
+(global-set-key (kbd "C-c s f") 'my/select-function)
 
 (provide 'keybindings-init)
 ;;; keybindings-init.el ends here

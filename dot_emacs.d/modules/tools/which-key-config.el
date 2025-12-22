@@ -153,7 +153,8 @@
   "C-c k w" "windows"
   "C-c k u" "ui"
   "C-c k h" "help"
-  "C-c k s" "search")
+  "C-c k s" "search"
+  "C-c s" "selection")
 
 (provide 'which-key-config)
 ;;; which-key-config.el ends here
