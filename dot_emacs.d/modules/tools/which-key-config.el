@@ -43,13 +43,13 @@
     "C-c g" "git"
     "C-c h" "help"
     "C-c i" "insert"
-    "C-c j" "jump"
-    "C-c k" "kill"
+    "C-c j" "avy jump"
+    "C-c k" "custom keys"
     "C-c l" "list"
     "C-c m" "mode"
-    "C-c n" "note"
+    "C-c n" "next para"
     "C-c o" "open"
-    "C-c p" "project"
+    "C-c p" "prev para"
     "C-c q" "quit"
     "C-c r" "register"
     "C-c s" "search"
@@ -60,6 +60,8 @@
     "C-c x" "text"
     "C-c y" "yank"
     "C-c z" "zoom"
+    "C-c SPC" "avy char"
+    "C-c /" "comment"
     "C-x a" "abbrev"
     "C-x n" "narrow"
     "C-x r" "register"
@@ -138,6 +140,20 @@
   
   ;; Highlight typed prefix
   (setq which-key-highlight-prefix t))
+
+;; Add custom keymap for our prefix
+(which-key-add-key-based-replacements
+  "C-c k b" "buffers"
+  "C-c k f" "files"
+  "C-c k p" "projects"
+  "C-c k t" "text"
+  "C-c k l" "lines"
+  "C-c k c" "compile"
+  "C-c k d" "debug"
+  "C-c k w" "windows"
+  "C-c k u" "ui"
+  "C-c k h" "help"
+  "C-c k s" "search")
 
 (provide 'which-key-config)
 ;;; which-key-config.el ends here

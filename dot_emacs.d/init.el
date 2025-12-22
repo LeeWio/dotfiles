@@ -35,6 +35,7 @@
 (add-to-list 'load-path (expand-file-name "modules/perf" user-emacs-directory))
 (add-to-list 'load-path (expand-file-name "modules/lsp" user-emacs-directory))
 (add-to-list 'load-path (expand-file-name "modules/lsp/lang" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "modules/keybindings" user-emacs-directory))
 
 ;; Core configurations
 (require 'core-init)
@@ -53,6 +54,9 @@
 
 ;; LSP and completion system
 (require 'lsp-init)
+
+;; Keybindings configuration
+(require 'keybindings-init)
 
 (provide 'init)
 ;;; init.el ends here
