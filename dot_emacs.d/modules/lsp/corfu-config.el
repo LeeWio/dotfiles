@@ -5,9 +5,11 @@
 
 ;;; Code:
 
-;; Install required packages if not already installed
+;; Install and configure corfu
 (use-package corfu
   :ensure t
+  :init
+  (global-corfu-mode 1)
   :custom
   ;; Configure corfu display
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
@@ -30,23 +32,11 @@
               ("S-TAB" . corfu-previous)
               ([backtab] . corfu-previous)
               ("M-d" . corfu-popupinfo-toggle)
-              ("M-l" . corfu-show-location))
-  :hook ((prog-mode . corfu-mode)
-         (shell-mode . corfu-mode)
-         (eshell-mode . corfu-mode)
-         (text-mode . corfu-mode))
-  :config
-  ;; Enable Corfu globally
-  (global-corfu-mode 1))
+              ("M-l" . corfu-show-location)))
 
-;; Enhance Corfu with popup information
-(use-package corfu-popupinfo
-  :after corfu
-  :hook (corfu-mode . corfu-popupinfo-mode)
-  :custom
-  (corfu-popupinfo-max-height 20)
-  (corfu-popupinfo-min-width 40)
-  (corfu-popupinfo-delay 0.2))
+;; Popup information for corfu (built into corfu since version 1.0)
+(with-eval-after-load 'corfu
+  (add-hook 'corfu-mode-hook #'corfu-popupinfo-mode))
 
 ;; Use Orderless for flexible completion filtering
 (use-package orderless
@@ -76,23 +66,16 @@
   (add-to-list 'completion-at-point-functions #'cape-dict)
   (add-to-list 'completion-at-point-functions #'cape-elisp-symbol))
 
-;; Eldoc-box for better documentation display
-(use-package eldoc-box
-  :ensure t
-  :hook (eglot-managed-mode . eldoc-box-hover-at-point-mode))
-
 ;; Ensure eglot works with corfu
-(with-eval-after-load 'eglot
-  ;; Make sure eglot's completion function is added to the front of the list
-  (defun my/eglot-corfu-setup ()
-    "Setup eglot completion with corfu."
-    (add-hook 'eglot-managed-mode-hook
-              (lambda ()
-                ;; Add eglot completion backend at the beginning of the list
-                (add-to-list 'completion-at-point-functions 
-                             #'eglot-completion-at-point nil t))))
-  
-  (add-hook 'eglot-mode-hook 'my/eglot-corfu-setup))
+(use-package eglot
+  :ensure t
+  :config
+  ;; Make sure eglot's completion function is properly integrated
+  (add-hook 'eglot-managed-mode-hook
+            (lambda ()
+              ;; Add eglot completion backend
+              (add-to-list 'completion-at-point-functions 
+                           #'eglot-completion-at-point nil 'local))))
 
 (provide 'corfu-config)
 ;;; corfu-config.el ends here
