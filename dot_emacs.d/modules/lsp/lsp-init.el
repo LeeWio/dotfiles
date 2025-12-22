@@ -8,14 +8,13 @@
 ;; Add language-specific configuration path
 (add-to-list 'load-path (expand-file-name "modules/lsp/lang" user-emacs-directory))
 
-;; Load completion system
+;; Load completion system (includes eglot configuration)
 (require 'corfu-config)
+(message "Loaded corfu-config")
 
 ;; Load performance optimizations
 (require 'lsp-perf)
-
-;; Load C/C++ specific eglot configuration
-(require 'eglot-c)
+(message "Loaded lsp-perf")
 
 (provide 'lsp-init)
 ;;; lsp-init.el ends here

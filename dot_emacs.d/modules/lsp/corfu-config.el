@@ -1,81 +1,60 @@
 ;;; corfu-config.el --- Corfu completion system configuration -*- lexical-binding: t -*-
 
 ;;; Commentary:
-;; Corfu completion system with orderless filtering for enhanced programming experience
+;; Corfu completion system following official documentation and best practices
 
 ;;; Code:
 
-;; Install and configure corfu
+;; Install and configure corfu following official recommendations
 (use-package corfu
   :ensure t
+  :hook (prog-mode . corfu-mode)
   :init
   (global-corfu-mode 1)
   :custom
-  ;; Configure corfu display
+  ;; Essential corfu settings from official documentation
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
   (corfu-auto t)                 ;; Enable auto completion
   (corfu-auto-prefix 2)          ;; Minimum prefix length for auto completion
-  (corfu-auto-delay 0.1)         ;; Delay before showing completions
-  (corfu-popupinfo-delay 0.2)    ;; Delay for popup info
-  (corfu-preselect-first t)      ;; Preselect first candidate
-  (corfu-on-exact-match 'quit)   ;; Quit on exact match
-  (corfu-quit-at-boundary 'separator) ;; Quit at boundary
-  (corfu-quit-no-match t)        ;; Quit if there is no match
+  (corfu-auto-delay 0.1)         ;; Small delay before showing completions
   (corfu-separator ?\s)          ;; Separator for cycling
+  (corfu-quit-at-boundary nil)   ;; Continue completion at buffer boundary
+  (corfu-quit-no-match nil)      ;; Continue if there is no match
   (corfu-preview-current 'insert) ;; Preview current candidate
   (corfu-scroll-margin 5)        ;; Scroll margin for candidates
   (corfu-max-width 80)           ;; Maximum width of candidates
   (corfu-count 14)               ;; Number of candidates to show
+  (corfu-on-exact-match 'quit)   ;; Quit on exact match
   :bind (:map corfu-map
               ("TAB" . corfu-next)
               ([tab] . corfu-next)
               ("S-TAB" . corfu-previous)
               ([backtab] . corfu-previous)
+              ("RET" . corfu-complete)
               ("M-d" . corfu-popupinfo-toggle)
               ("M-l" . corfu-show-location)))
 
-;; Popup information for corfu (built into corfu since version 1.0)
+;; Enable corfu popup information (built into corfu)
 (with-eval-after-load 'corfu
   (add-hook 'corfu-mode-hook #'corfu-popupinfo-mode))
+
+;; Configure completion styles following official recommendations
+(setq completion-styles '(orderless basic)
+      completion-category-defaults nil
+      completion-category-overrides '((file (styles basic partial-completion))))
 
 ;; Use Orderless for flexible completion filtering
 (use-package orderless
   :ensure t
   :custom
-  ;; Configure orderless matching styles
-  (completion-styles '(orderless basic))
-  (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles basic partial-completion))))
   (orderless-matching-styles '(orderless-literal orderless-regexp)))
 
-;; Integrate Corfu with Cape for additional completion backends
-(use-package cape
-  :ensure t
-  :after corfu
-  :init
-  ;; Add Cape completion backends to completion-at-point-functions
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-  (add-to-list 'completion-at-point-functions #'cape-history)
-  (add-to-list 'completion-at-point-functions #'cape-keyword)
-  (add-to-list 'completion-at-point-functions #'cape-tex)
-  (add-to-list 'completion-at-point-functions #'cape-sgml)
-  (add-to-list 'completion-at-point-functions #'cape-rfc1345)
-  (add-to-list 'completion-at-point-functions #'cape-abbrev)
-  (add-to-list 'completion-at-point-functions #'cape-dict)
-  (add-to-list 'completion-at-point-functions #'cape-elisp-symbol))
-
-;; Ensure eglot works with corfu
-(use-package eglot
-  :ensure t
-  :config
-  ;; Make sure eglot's completion function is properly integrated
-  (add-hook 'eglot-managed-mode-hook
-            (lambda ()
-              ;; Add eglot completion backend
-              (add-to-list 'completion-at-point-functions 
-                           #'eglot-completion-at-point nil 'local))))
+;; Ensure eglot works properly with corfu
+;; No special configuration needed - corfu works with any completion-at-point backend
+;; Eglot is built into Emacs 29+, so we just need to require it
+(require 'eglot)
+(add-hook 'c-mode-hook 'eglot-ensure)
+(add-hook 'c++-mode-hook 'eglot-ensure)
 
 (provide 'corfu-config)
 ;;; corfu-config.el ends here
