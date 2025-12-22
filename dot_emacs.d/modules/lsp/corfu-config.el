@@ -1,30 +1,31 @@
 ;;; corfu-config.el --- Corfu completion system configuration -*- lexical-binding: t -*-
 
 ;;; Commentary:
-;; Corfu completion system following official documentation and best practices
+;; Corfu completion system with proper eglot integration
 
 ;;; Code:
 
-;; Install and configure corfu following official recommendations
+;; Install and configure corfu
 (use-package corfu
   :ensure t
-  :hook (prog-mode . corfu-mode)
   :init
   (global-corfu-mode 1)
-  :custom
-  ;; Essential corfu settings from official documentation
-  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto t)                 ;; Enable auto completion
-  (corfu-auto-prefix 2)          ;; Minimum prefix length for auto completion
-  (corfu-auto-delay 0.1)         ;; Small delay before showing completions
-  (corfu-separator ?\s)          ;; Separator for cycling
-  (corfu-quit-at-boundary nil)   ;; Continue completion at buffer boundary
-  (corfu-quit-no-match nil)      ;; Continue if there is no match
-  (corfu-preview-current 'insert) ;; Preview current candidate
-  (corfu-scroll-margin 5)        ;; Scroll margin for candidates
-  (corfu-max-width 80)           ;; Maximum width of candidates
-  (corfu-count 14)               ;; Number of candidates to show
-  (corfu-on-exact-match 'quit)   ;; Quit on exact match
+  :config
+  ;; Essential corfu settings
+  (setq corfu-cycle t)
+  (setq corfu-auto t)
+  (setq corfu-auto-prefix 1)
+  (setq corfu-auto-delay 0.1)
+  (setq corfu-separator ?\s)
+  (setq corfu-quit-at-boundary nil)
+  (setq corfu-quit-no-match nil)
+  (setq corfu-preview-current 'insert)
+  (setq corfu-scroll-margin 5)
+  (setq corfu-max-width 80)
+  (setq corfu-count 14)
+  (setq corfu-on-exact-match 'quit)
+  
+  ;; Key bindings
   :bind (:map corfu-map
               ("TAB" . corfu-next)
               ([tab] . corfu-next)
@@ -34,14 +35,14 @@
               ("M-d" . corfu-popupinfo-toggle)
               ("M-l" . corfu-show-location)))
 
-;; Enable corfu popup information (built into corfu)
+;; Enable corfu popup information
 (with-eval-after-load 'corfu
   (add-hook 'corfu-mode-hook #'corfu-popupinfo-mode))
 
-;; Configure completion styles following official recommendations
-(setq completion-styles '(orderless basic)
-      completion-category-defaults nil
-      completion-category-overrides '((file (styles basic partial-completion))))
+;; Configure completion styles
+(setq completion-styles '(orderless basic))
+(setq completion-category-defaults nil)
+(setq completion-category-overrides '((file (styles basic partial-completion))))
 
 ;; Use Orderless for flexible completion filtering
 (use-package orderless
@@ -49,10 +50,25 @@
   :custom
   (orderless-matching-styles '(orderless-literal orderless-regexp)))
 
-;; Ensure eglot works properly with corfu
-;; No special configuration needed - corfu works with any completion-at-point backend
-;; Eglot is built into Emacs 29+, so we just need to require it
+;; Explicitly require eglot to ensure it's available
 (require 'eglot)
+
+;; Ensure eglot is properly integrated with corfu
+;; We define this after corfu is loaded to ensure proper integration
+(with-eval-after-load 'eglot
+  ;; Make sure eglot's completion function is available
+  (defun my-eglot-setup ()
+    "Setup eglot completion with corfu."
+    ;; Add eglot completion to the front of completion functions
+    (add-hook 'eglot-managed-mode-hook
+              (lambda ()
+                (add-to-list 'completion-at-point-functions 
+                             #'eglot-completion-at-point nil t))))
+  
+  ;; Apply the setup
+  (my-eglot-setup))
+
+;; Enable eglot for C/C++ modes
 (add-hook 'c-mode-hook 'eglot-ensure)
 (add-hook 'c++-mode-hook 'eglot-ensure)
 

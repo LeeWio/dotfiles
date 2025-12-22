@@ -1,21 +1,12 @@
 ;;; eglot-c.el --- Eglot configuration for C/C++ -*- lexical-binding: t -*-
 
 ;;; Commentary:
-;; Simple eglot configuration for C/C++ development with clangd
+;; Simple eglot configuration for C/C++ development
 
 ;;; Code:
 
-;; Ensure eglot is available
-(use-package eglot
-  :ensure t
-  :hook ((c-mode . eglot-ensure)
-         (c++-mode . eglot-ensure))
-  :custom
-  ;; Simple clangd configuration
-  (eglot-events-buffer-size 0)  ; Disable events buffer for performance
-  (eglot-sync-connect nil)      ; Connect asynchronously
-  (eglot-autoshutdown t)        ; Shutdown server when buffer is killed
-  :config
+;; Eglot configuration for C/C++
+(with-eval-after-load 'eglot
   ;; Register clangd as the LSP server for C/C++
   (add-to-list 'eglot-server-programs
                '((c-mode c++-mode) . ("clangd" 
