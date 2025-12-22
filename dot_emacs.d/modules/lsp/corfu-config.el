@@ -63,7 +63,7 @@
     (add-hook 'eglot-managed-mode-hook
               (lambda ()
                 (add-to-list 'completion-at-point-functions 
-                             #'eglot-completion-at-point nil t))))
+                             #'eglot-completion-at-point))))
   
   ;; Apply the setup
   (my-eglot-setup))
