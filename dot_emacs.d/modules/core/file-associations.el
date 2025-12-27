@@ -8,10 +8,7 @@
 ;; File associations
 (add-to-list 'auto-mode-alist '("\\.log\\'" . text-mode))
 (add-to-list 'auto-mode-alist '("COMMIT_EDITMSG\\'" . text-mode))
-(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
-(add-to-list 'auto-mode-alist '("\\.jsx\\'" . js-mode))
+;; Tree-sitter associations are handled separately in the treesit configuration
 (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
 (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
 (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))

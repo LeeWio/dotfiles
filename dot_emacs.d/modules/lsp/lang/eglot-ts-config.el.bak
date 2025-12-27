@@ -8,7 +8,7 @@
 (use-package eglot
   :ensure t
   :hook
-  ((typescript-ts-mode js-ts-mode tsx-ts-mode) . eglot-ensure)
+  ((typescript-mode js-mode tsx-ts-mode) . eglot-ensure)
 
   :config
   ;; -----------------------------
@@ -22,18 +22,26 @@
      (vtsls-found
       (message "[Eglot] Using vtsls (Volta TypeScript Language Server)")
       (add-to-list 'eglot-server-programs
-                   '((typescript-ts-mode js-ts-mode tsx-ts-mode)
+                   '((typescript-mode js-mode tsx-ts-mode)
                      .
-                     ("vtsls" "--stdio"))))
-
+                     ("vtsls" "--stdio")))
+      ;; Add tree-sitter support if available
+      (when (treesit-available-p)
+        (add-hook 'tsx-ts-mode-hook #'eglot-ensure)
+        (add-hook 'js-ts-mode-hook #'eglot-ensure)))
+     
      ;; Fallback to typescript-language-server
      (ts-server-found
       (message "[Eglot] Using typescript-language-server")
       (add-to-list 'eglot-server-programs
-                   '((typescript-ts-mode js-ts-mode tsx-ts-mode)
+                   '((typescript-mode js-mode tsx-ts-mode)
                      .
-                     ("typescript-language-server" "--stdio"))))
-
+                     ("typescript-language-server" "--stdio")))
+      ;; Add tree-sitter support if available
+      (when (treesit-available-p)
+        (add-hook 'tsx-ts-mode-hook #'eglot-ensure)
+        (add-hook 'js-ts-mode-hook #'eglot-ensure)))
+     
      ;; No server found
      (t
       (message "[Eglot] No TypeScript language server found! Install via: npm i -g typescript-language-server typescript OR npm i -g @volar/vscode-typescript-languageserver"))))
@@ -57,7 +65,33 @@
               (setq-local eglot-extend-to-xref t)
 
               ;; Format on save for frontend development
-              (add-hook 'before-save-hook #'eglot-format-buffer -10 t))))
+              (add-hook 'before-save-hook #'eglot-format-buffer -10 t)
+              
+              ;; Configure JSX support for React files
+              (when (or (string-match "\\.tsx\\'" (or buffer-file-name ""))
+                        (string-match "\\.jsx\\'" (or buffer-file-name "")))
+                (setq-local eglot-workspace-configuration
+                            (append eglot-workspace-configuration
+                                    `(:typescript
+                                      (:jsxFragmentFactory "React.Fragment")
+                                      :javascript
+                                      (:jsxFragmentFactory "React.Fragment"))))))))
+
+;; Additional configuration for JSX files
+(defun my-eglot-jsx-setup ()
+  "Additional setup for JSX/TSX files with Eglot."
+  (when (or (eq major-mode 'tsx-ts-mode)
+            (eq major-mode 'js-ts-mode)
+            (string-match "\\.tsx\\'" (or buffer-file-name ""))
+            (string-match "\\.jsx\\'" (or buffer-file-name "")))
+    (setq-local eglot-workspace-configuration
+                (append eglot-workspace-configuration
+                        `(:typescript
+                          (:jsxAttrsUsedByJsxPragma "React")
+                          :javascript
+                          (:jsxAttrsUsedByJsxPragma "React"))))))
+
+(add-hook 'eglot-managed-mode-hook 'my-eglot-jsx-setup)
 
 ;; -----------------------------
 ;; Key bindings

@@ -5,16 +5,15 @@
 
 ;;; Code:
 
-;; TypeScript mode configuration
-(use-package typescript-mode
-  :ensure t
-  :config
+;; TypeScript configuration for tree-sitter
+(when (treesit-available-p)
   (defun my/typescript-mode-setup ()
-    "Setup for typescript-mode."
+    "Setup for typescript tree-sitter modes."
     (setq typescript-indent-level 2)
-    ;; Enable JSX syntax in typescript-mode
+    ;; Enable JSX syntax in typescript modes
     (setq js-jsx-browser-refresh-delay 0.5))
-  (add-hook 'typescript-mode-hook 'my/typescript-mode-setup))
+  (add-hook 'tsx-ts-mode-hook 'my/typescript-mode-setup)
+  (add-hook 'typescript-ts-mode-hook 'my/typescript-mode-setup))
 
 (provide 'ts-config)
 ;;; ts-config.el ends here

@@ -5,6 +5,9 @@
 
 ;;; Code:
 
+;; Tree-sitter configuration (for syntax highlighting)
+(require 'treesit-config)
+
 ;; JavaScript configuration
 (require 'js-config)
 

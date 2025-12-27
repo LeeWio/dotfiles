@@ -11,13 +11,12 @@
   ;; This runs when a .tsx file is opened
   (when (string-match "\\.tsx\\'" (buffer-file-name))
     ;; Ensure we're in the right mode for JSX
-    (setq-local eglot-send-changes-idle-time 0.5)
+    (setq-local lsp-idle-delay 0.5)
     ;; Enable JSX-specific features if available
-    (when (fboundp 'typescript-mode)
-      (setq-local typescript-indent-level 2))))
+    (setq-local typescript-indent-level 2)))
 
-;; Run setup when opening TSX files
-(add-hook 'typescript-mode-hook 'my/tsx-file-setup)
+;; Run setup when opening TSX files in tsx-ts-mode
+(add-hook 'tsx-ts-mode-hook 'my/tsx-file-setup)
 
 (provide 'tsx-config)
 ;;; tsx-config.el ends here

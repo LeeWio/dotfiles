@@ -5,17 +5,16 @@
 
 ;;; Code:
 
-;; JavaScript mode configuration
-(use-package js
-  :mode ("\\.js\\'" . js-mode)
-  :mode ("\\.jsx\\'" . js-mode)
-  :config
+;; JavaScript configuration for tree-sitter
+(when (treesit-available-p)
   (defun my/js-mode-setup ()
-    "Setup for js-mode."
+    "Setup for js tree-sitter modes."
     (setq js-indent-level 2)
     ;; Enable JSX syntax
     (setq js-jsx-browser-refresh-delay 0.5))
-  (add-hook 'js-mode-hook 'my/js-mode-setup))
+  (add-hook 'js-ts-mode-hook 'my/js-mode-setup)
+  ;; Also add to tsx-ts-mode since it handles JSX
+  (add-hook 'tsx-ts-mode-hook 'my/js-mode-setup))
 
 ;; JSON mode configuration
 (use-package json-mode
