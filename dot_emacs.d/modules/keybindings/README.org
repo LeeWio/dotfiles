@@ -1,0 +1,183 @@
+#+TITLE: Keybindings Module Documentation
+#+AUTHOR: Emacs Configuration
+#+DATE: 2025-12-24
+
+* Keybindings Module Overview
+
+The Keybindings module provides comprehensive keyboard shortcuts to enhance Emacs productivity. It includes custom keybindings organized by function, global shortcuts, and integration with various packages like Avy and Expand-Region.
+
+* Components
+
+** keybindings-init.el
+Main initialization file that defines all custom keybindings.
+
+* Package Integrations
+
+** Avy
+Quick navigation package for jumping to visible text.
+
+*** Features
+- Character-based navigation
+- Line-based navigation
+- Visual selection of targets
+
+*** Key Bindings
+- C-c SPC - Jump to character (avy-goto-char-timer)
+- C-c j - Jump to line (avy-goto-line)
+
+** Expand-Region
+Progressive text selection package.
+
+*** Features
+- Expand selection to next logical unit
+- Contract selection to previous logical unit
+- Language-aware selection expansion
+
+*** Key Bindings
+- C-= - Expand region (er/expand-region)
+- C-- - Contract region (er/contract-region)
+
+** MWIM (Move Where I Mean)
+Intelligent beginning/end of line navigation.
+
+*** Features
+- Context-aware movement in code vs comments
+- Enhanced C-a and C-e behavior
+- Works with programming and text modes
+
+*** Key Bindings
+- C-a - Smart beginning of line (mwim-beginning-of-line)
+- C-e - Smart end of line (mwim-end-of-line)
+
+* Custom Keybinding Structure
+
+The module uses a hierarchical keybinding system with "C-c k" as the main prefix:
+
+** Buffer Management (C-c k b)
+- C-c k b n - Next buffer (next-buffer)
+- C-c k b p - Previous buffer (previous-buffer)
+- C-c k b k - Kill current buffer (kill-this-buffer)
+- C-c k b s - Switch to buffer (switch-to-buffer)
+- C-c k b l - List buffers (ibuffer)
+
+** File Operations (C-c k f)
+- C-c k f f - Find file (find-file)
+- C-c k f s - Save buffer (save-buffer)
+- C-c k f w - Write file (write-file)
+- C-c k f r - Open recent files (recentf-open-files)
+
+** Project Management (C-c k p) [When Projectile is available]
+- C-c k p f - Find file in project (projectile-find-file)
+- C-c k p p - Switch project (projectile-switch-project)
+- C-c k p s - Search in project (projectile-grep)
+
+** Text Manipulation (C-c k t)
+- C-c k t c - Capitalize (capitalize-dwim)
+- C-c k t l - Downcase (downcase-dwim)
+- C-c k t u - Upcase (upcase-dwim)
+- C-c k t r - Reverse region (reverse-region)
+- C-c k t f - Fill paragraph (fill-paragraph)
+
+** Line Operations (C-c k l)
+- C-c k l d - Duplicate line (duplicate-dwim)
+- C-c k l c - Delete trailing whitespace (delete-trailing-whitespace)
+- C-c k l n - Move to column (move-to-column)
+- C-c k l s - Sort lines (sort-lines)
+
+** Compilation (C-c k c)
+- C-c k c c - Compile (compile)
+- C-c k c r - Recompile (recompile)
+
+** Debugging (C-c k d)
+- C-c k d d - Start GDB (gdb)
+- C-c k d t - Toggle debug on error (toggle-debug-on-error)
+
+** Window Management (C-c k w)
+- C-c k w s - Split window below (split-window-below)
+- C-c k w v - Split window right (split-window-right)
+- C-c k w c - Close window (delete-window)
+- C-c k w o - Delete other windows (delete-other-windows)
+
+** UI Toggles (C-c k u)
+- C-c k u l - Toggle line numbers (global-display-line-numbers-mode)
+- C-c k u h - Toggle line highlighting (global-hl-line-mode)
+- C-c k u w - Toggle whitespace mode (whitespace-mode)
+- C-c k u f - Toggle auto-fill mode (auto-fill-mode)
+
+** Help (C-c k h)
+- C-c k h k - Describe key (describe-key)
+- C-c k h f - Describe function (describe-function)
+- C-c k h v - Describe variable (describe-variable)
+- C-c k h m - Describe mode (describe-mode)
+
+** Search (C-c k s)
+- C-c k s s - Search forward (isearch-forward)
+- C-c k s r - Query replace (query-replace)
+- C-c k s f - Find with grep (find-grep)
+
+* Global Key Bindings
+
+** Standard Operations
+- C-x C-b - List buffers (ibuffer)
+- C-c / - Comment/uncomment region (comment-or-uncomment-region)
+- C-c n - Forward paragraph (forward-paragraph)
+- C-c p - Backward paragraph (backward-paragraph)
+- C-x C-s - Save buffer (save-buffer)
+
+** Window Navigation
+- C-x <up> - Move to window above (windmove-up)
+- C-x <down> - Move to window below (windmove-down)
+- C-x <left> - Move to window left (windmove-left)
+- C-x <right> - Move to window right (windmove-right)
+
+** Text Selection Helpers
+- C-c s l - Select current line (my/select-line)
+- C-c s p - Select current paragraph (my/select-paragraph)
+- C-c s f - Select current function (my/select-function)
+
+* Custom Functions
+
+** my/select-line
+Selects the entire current line, including the newline character.
+
+** my/select-paragraph
+Selects the current paragraph, including surrounding whitespace.
+
+** my/select-function
+Selects the current function using mark-defun, which is language-aware.
+
+* Configuration Options
+
+** Custom Keymap
+- ~my-keys-map~ - Sparse keymap for custom keybindings
+- ~C-c k~ - Main prefix key for custom keybindings
+
+* Usage Tips
+
+** Learning the Keybindings
+- Start with frequently used bindings like buffer management (C-c k b)
+- Use Avy for quick navigation (C-c SPC, C-c j)
+- Use Expand-Region for precise text selection (C-=, C--)
+- Learn MWIM for better line navigation (C-a, C-e)
+
+** Extending the System
+- Add new keybindings by extending ~my-keys-map~
+- Use the existing category structure for consistency
+- Follow the convention of related keybindings in the same category
+
+** Troubleshooting
+
+** Keybinding Conflicts
+- Check if a keybinding conflicts with existing Emacs functions
+- Use ~C-h c~ followed by the key sequence to check binding
+- Verify that required packages are properly loaded
+
+** Package Dependencies
+- Ensure Avy and Expand-Region are installed for their keybindings
+- Check that Projectile is available for project keybindings
+- Verify MWIM is properly loaded for enhanced navigation
+
+** Missing Keybindings
+- Confirm that keybindings-init.el is loaded
+- Check that custom prefix map is properly defined
+- Verify ~global-set-key~ calls execute without errors

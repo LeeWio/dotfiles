@@ -1,0 +1,88 @@
+#+TITLE: Core Module Documentation
+#+AUTHOR: Emacs Configuration
+#+DATE: 2025-12-24
+
+* Core Module Overview
+
+The Core module contains fundamental Emacs settings and configurations that are essential for the basic functionality of Emacs. This module handles encoding, backup, history, line numbers, highlighting, and smooth scrolling.
+
+* Components
+
+** core-init.el
+Initialization file that loads all core configurations.
+
+** line-number-config.el
+Configuration for line numbers display in the left margin.
+
+*** Features
+- Displays relative line numbers
+- Shows current line number in different color
+- Supports both absolute and relative numbering
+
+*** Customization Options
+- ~display-line-numbers-type~ - Set to 'relative for relative numbers
+- ~global-display-line-numbers-mode~ - Enables line numbers globally
+
+** hl-line-config.el
+Configuration for highlighting the current line.
+
+*** Features
+- Highlights the current line where the cursor is located
+- Improves readability by visually separating the active line
+- Uses Catppuccin theme colors for consistent appearance
+
+*** Customization Options
+- ~global-hl-line-mode~ - Enables highlighting globally
+- ~hl-line-face~ - Face used for highlighting
+
+** smooth-scrolling-config.el
+Configuration for smooth scrolling experience.
+
+*** Features
+- Smooth scrolling instead of jarring jumps
+- Customizable scroll behavior
+- Better user experience when navigating documents
+
+*** Customization Options
+- ~pixel-scroll-precision-mode~ - Enables pixel-precision scrolling
+- ~scroll-step~ - Number of lines to scroll at a time
+- ~scroll-conservatively~ - Keep cursor away from window edges
+- ~mouse-wheel-scroll-amount~ - Amount to scroll with mouse wheel
+
+* Configuration Details
+
+** Encoding Settings
+- UTF-8 as default coding system
+- Proper handling of various file encodings
+
+** Backup Settings
+- Automatic backup creation
+- Backup location configuration
+- Version control for backups
+
+** History Settings
+- Recent file tracking
+- Command history preservation
+- Minibuffer history management
+
+* Performance Considerations
+
+The core module is optimized for performance with:
+- Efficient line number display
+- Minimal overhead for highlighting
+- Optimized scrolling behavior
+- Proper resource management
+
+* Troubleshooting
+
+** Line Numbers Not Appearing
+- Ensure ~global-display-line-numbers-mode~ is enabled
+- Check if specific major modes disable line numbers
+
+** Highlighting Issues
+- Verify ~global-hl-line-mode~ is active
+- Check if theme conflicts affect highlighting
+
+** Scrolling Problems
+- Verify ~pixel-scroll-precision-mode~ is enabled
+- Check if other packages interfere with scrolling behavior

@@ -39,5 +39,26 @@
 ;; Git configuration
 (require 'git-config)
 
+;; MWIM configuration
+(require 'mwim-config)
+
+;; Clipboard configuration for Wayland
+(require 'clipboard-config)
+
+;; Frontend formatting tools
+(require 'frontend-formatting)
+
+;; Frontend project management
+(require 'frontend-project)
+
+;; Projectile configuration
+(require 'projectile-init)
+
+;; Treemacs configuration
+(require 'treemacs-init)
+
+;; Vertico configuration
+(require 'vertico-init)
+
 (provide 'tools-init)
 ;;; tools-init.el ends here

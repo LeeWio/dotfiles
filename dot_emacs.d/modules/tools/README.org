@@ -1,0 +1,203 @@
+#+TITLE: Tools Module Documentation
+#+AUTHOR: Emacs Configuration
+#+DATE: 2025-12-24
+
+* Tools Module Overview
+
+The Tools module provides various utilities and enhancements for Emacs functionality, including project management, file exploration, clipboard integration, key binding help, and more. This module enhances productivity with essential development tools.
+
+* Components
+
+** tools-init.el
+Initialization file that loads all tool configurations.
+
+** which-key-config.el
+Configuration for the which-key package that shows available key bindings.
+
+*** Features
+- Shows key binding suggestions as you type prefixes
+- Delayed appearance for better performance
+- Integration with Evil mode for modal editing
+- Customizable appearance and behavior
+
+*** Customization Options
+- ~which-key-idle-delay~ - Delay before showing key hints (0.8 seconds)
+- ~which-key-idle-secondary-delay~ - Delay for subsequent hints (0.1 seconds)
+- ~which-key-allow-evil-operators~ - Enable with Evil operators (t)
+- ~which-key-show-remaining-on-error~ - Show remaining keys on error (t)
+- ~which-key-echo-keystrokes~ - Echo keystrokes (0.02)
+
+** git-config.el
+Configuration for Git integration with Magit.
+
+*** Features
+- Magit for Git operations
+- Git gutter for change indicators
+- Git link for remote repository access
+- Optimized Git operations for performance
+
+*** Customization Options
+- ~magit-refresh-status-buffer~ - Refresh status buffer (nil for performance)
+- ~magit-auto-revert-mode-lighter~ - Auto-revert mode lighter ("" for performance)
+- Various Magit settings for improved performance
+- Git gutter settings for change tracking
+
+** mwim-config.el
+Configuration for Move Where I Mean (MWIM) package.
+
+*** Features
+- Intelligent movement between code and comments
+- Context-aware navigation
+- Enhanced beginning/end of line functionality
+
+*** Customization Options
+- ~mwim-context-mode-list~ - Modes where MWIM is active
+- Key bindings for MWIM functionality
+
+** clipboard-config.el
+Configuration for clipboard integration on Wayland systems.
+
+*** Features
+- System clipboard integration using wl-clipboard
+- Automatic detection of Wayland session
+- Copy and paste between Emacs and other applications
+- Path existence checks before applying configuration
+
+*** Implementation
+- Checks for Wayland session and non-graphical environment
+- Verifies availability of wl-copy and wl-paste
+- Sets interprogram-cut-function and interprogram-paste-function
+- Uses substring-no-properties to ensure clean text
+
+** projectile-config.el
+Configuration for Projectile project management.
+
+*** Features
+- Project discovery and management
+- Fast file switching within projects
+- Multi-project search and replace
+- Integration with version control systems
+- Current directory as project functionality
+
+*** Customization Options
+- ~projectile-enable-caching~ - Enable caching for faster operations (t)
+- ~projectile-kill-buffers-filter~ - Buffer killing behavior (kill-only-buffer)
+- ~projectile-sort-order~ - Project sorting method (recentf)
+- ~projectile-switch-project-action~ - Default project switching action (dired)
+- ~projectile-require-project-root~ - Require project root for operations (t)
+- ~projectile-use-git-grep~ - Use git grep when available (t)
+- ~projectile-indexing-method~ - Indexing method (hybrid)
+- ~projectile-globally-ignored-directories~ - Directories to ignore
+- ~projectile-globally-ignored-files~ - Files to ignore
+
+*** Additional Features
+- Function to set current directory as project (~my/projectile-set-current-dir-as-project~)
+- Automatic detection of current directory as project
+- Key binding C-c p . for setting current directory as project
+
+** treemacs-config.el
+Configuration for Treemacs file explorer.
+
+*** Features
+- Tree layout file explorer
+- Git status integration
+- Project-aware file management
+- Icon support
+- Multiple project support
+
+*** Customization Options
+- ~treemacs-collapse-dirs~ - Collapse single-child directories (3 levels)
+- ~treemacs-deferred-git-apply-delay~ - Git status update delay (0.5)
+- ~treemacs-display-in-side-window~ - Display in side window (t)
+- ~treemacs-eldoc-display~ - Enable eldoc display (t)
+- ~treemacs-file-event-delay~ - File event processing delay (5000)
+- ~treemacs-file-follow-delay~ - File following delay (0.1)
+- ~treemacs-follow-after-init~ - Follow current file after init (t)
+- ~treemacs-indentation~ - Indentation level (2)
+- ~treemacs-is-never-other-window~ - Prevent as other window (t)
+- ~treemacs-max-git-entries~ - Max git entries to process (5000)
+- ~treemacs-missing-project-action~ - Action for missing projects (ask)
+- ~treemacs-move-forward-on-expand~ - Move forward when expanding (t)
+- ~treemacs-no-delete-other-windows~ - Don't delete other windows (t)
+- ~treemacs-project-follow-cleanup~ - Cleanup after project follow (t)
+- ~treemacs-position~ - Window position (left)
+- ~treemacs-recenter-distance~ - Recenter distance (0.1)
+- ~treemacs-show-hidden-files~ - Show hidden files (t)
+- ~treemacs-sorting~ - Sorting method (alphabetic-asc)
+- ~treemacs-width~ - Window width (35)
+
+** vertico-config.el
+Configuration for Vertico, Orderless, and Consult completion system.
+
+*** Features
+- Modern minibuffer completion interface (Vertico)
+- Flexible completion style (Orderless)
+- Enhanced search and navigation (Consult)
+- Integration with existing Orderless configuration
+
+*** Customization Options
+- ~vertico-count~ - Number of candidates to show (10)
+- ~vertico-cycle~ - Cycle through candidates (t)
+- ~vertico-resize~ - Resize minibuffer to fit candidates (t)
+- ~vertico-scroll-margin~ - Scroll margin (2)
+- ~orderless-component-separator~ - Separator for orderless components
+- ~orderless-matching-styles~ - Matching styles for orderless
+- ~consult-narrow-key~ - Key for narrowing in consult search ("<")
+- ~consult-preview-key~ - Key for preview ('any)
+- Various consult-specific settings
+
+*** Key Bindings
+- C-x b - Switch buffer
+- C-x 4 b - Switch buffer in other window
+- C-x 5 b - Switch buffer in other frame
+- C-c h - Search in history
+- C-c m - Execute mode command
+- C-c k - Keyboard macro consult
+- C-M-j - Jump to line in current buffer
+- C-M-g - Search with ripgrep
+- C-c g - Search with git grep
+- C-c f - Find files
+- M-y - Replace yank with consult yank
+- M-s e - Search isearch history
+
+* Integration and Dependencies
+
+The tools module integrates with various packages:
+- Magit for Git operations
+- Git-gutter for change indicators
+- Browse-at-remote for remote repository access
+- Projectile for project management
+- Treemacs for file exploration
+- Vertico/Consult/Orderless for completion
+- Which-key for key binding help
+- MWIM for intelligent navigation
+
+* Performance Considerations
+
+The tools module is optimized for performance with:
+- Caching for project operations
+- Optimized Git operations
+- Efficient file watching
+- Minimal resource usage for background processes
+
+* Troubleshooting
+
+** Projectile Not Working
+- Verify projectile package is installed
+- Check if project detection is working properly
+- Ensure key bindings are properly set
+
+** Treemacs Issues
+- Check if treemacs package is installed
+- Verify file permissions for file operations
+- Ensure Git integration is working properly
+
+** Clipboard Integration Problems
+- Confirm wl-clipboard tools are installed (wl-copy, wl-paste)
+- Verify Wayland session detection
+- Check if commands execute properly in terminal
+
+** Vertico/Consult Issues
+- Ensure all required packages are installed
+- Verify integration with existing completion system
+- Check if key bindings conflict with other packages

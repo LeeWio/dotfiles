@@ -1,0 +1,184 @@
+#+TITLE: LSP Module Documentation
+#+AUTHOR: Emacs Configuration
+#+DATE: 2025-12-24
+
+* LSP Module Overview
+
+The LSP (Language Server Protocol) module provides a modern, performant development environment with intelligent code completion, diagnostics, and language-specific features. It uses Eglot as the LSP client with Corfu for completion, implementing a complete development workflow.
+
+* Components
+
+** lsp-init.el
+Main initialization file that loads all LSP and completion configurations.
+
+** corfu-config.el
+Configuration for Corfu completion system with terminal support, icons, and integration with Eglot.
+
+*** Features
+- Modern completion interface with popup suggestions
+- Terminal compatibility with corfu-terminal
+- Popup information display
+- Yasnippet integration for template expansion
+- Nerd icons for visual enhancement
+- Eglot integration for LSP-powered completion
+
+*** Customization Options
+- ~corfu-auto~ - Enable auto completion (t)
+- ~corfu-auto-prefix~ - Minimum prefix length (1)
+- ~corfu-auto-delay~ - Delay before auto completion (0.1)
+- ~corfu-cycle~ - Cycle through candidates (t)
+- ~corfu-count~ - Number of candidates to show (14)
+- ~corfu-scroll-margin~ - Scroll margin for candidates (5)
+- ~corfu-preview-current~ - Preview current candidate (insert)
+- ~corfu-quit-no-match~ - Quit when no match (t)
+- ~corfu-quit-at-boundary~ - Quit at boundary (t)
+- ~corfu-on-exact-match~ - Action on exact match (nil)
+
+*** Key Bindings
+- TAB - Next candidate
+- S-TAB - Previous candidate
+- RET - Complete candidate
+
+** lsp-perf.el
+Performance optimizations for LSP and completion systems.
+
+*** Features
+- Garbage collection threshold tuning
+- Process output buffer optimization
+- Eglot event buffering
+- Large file handling
+- TRAMP performance optimization
+
+*** Customization Options
+- ~gc-cons-threshold~ - GC threshold (200MB)
+- ~read-process-output-max~ - Process output buffer size (4MB)
+- ~eglot-events-buffer-size~ - Eglot events buffer (0 to disable)
+- ~eglot-report-progress~ - Progress reporting (nil)
+- ~eglot-sync-connect~ - Synchronous connection (nil for async)
+- ~completion-ignore-case~ - Ignore case in completion (t)
+- ~read-buffer-completion-ignore-case~ - Buffer completion case (t)
+- ~read-file-name-completion-ignore-case~ - File name case (t)
+- ~corfu-auto-delay~ - Auto completion delay (0.08)
+- ~corfu-popupinfo-delay~ - Popup info delay (0.4 start, 0.1 repeat)
+
+*** Large File Optimizations
+- Applies optimizations to files larger than 2MB
+- Increases GC threshold for large files (400MB)
+- Disables bidirectional display reordering
+- Enables so-long-mode for extremely long lines
+- Disables line numbers for performance
+
+** Language-Specific Configurations (lsp/lang/)
+
+*** eglot-c.el
+Configuration for C and C++ development with clangd.
+
+**** Features
+- clangd language server integration
+- Background indexing
+- Clang-Tidy integration
+- Detailed completion style
+- Header insertion disabled
+- LLVM fallback style
+- Missing includes suggestions
+- Inlay hints support
+- Auto-shutdown when buffer closes
+
+**** Customization Options
+- clangd command-line options:
+  - --background-index
+  - --clang-tidy
+  - --completion-style=detailed
+  - --header-insertion=never
+  - --fallback-style=llvm
+  - --suggest-missing-includes
+  - --log=error
+
+**** Key Bindings
+- C-c r - Rename symbol
+- C-c d - Show documentation
+- C-c g d - Go to definition
+- C-c g r - Find references
+- C-c a - Code actions
+- C-c f - Format buffer
+
+*** eglot-java.el
+Configuration for Java development.
+
+**** Features
+- Java language server integration
+- Project-based configuration
+- Maven/Gradle project support
+- Code completion and navigation
+- Refactoring support
+
+*** eglot-ts.el
+Configuration for TypeScript and JavaScript development.
+
+**** Features
+- TypeScript/JavaScript language server
+- Type checking and completion
+- Import management
+- Refactoring tools
+- Format on save options
+
+* Integration Architecture
+
+** Eglot + Corfu Integration
+The module seamlessly integrates Eglot (LSP client) with Corfu (completion interface):
+- Eglot provides LSP-powered completion candidates
+- Corfu displays and manages completion interface
+- Orderless provides flexible matching
+- Yasnippet handles template expansion
+
+** Performance Considerations
+- Asynchronous LSP connections
+- Optimized process output handling
+- Reduced UI updates during operations
+- Large file handling with performance preservation
+
+* Key Features
+
+** Completion System
+- Context-aware completion with LSP
+- Fuzzy matching with Orderless
+- Popup information display
+- Icon-enhanced completion items
+- Template expansion with Yasnippet
+
+** Language Server Support
+- C/C++ with clangd
+- Java with language server
+- TypeScript/JavaScript with ts-ls
+- Extensible architecture for additional languages
+
+** Performance Optimizations
+- Dynamic GC threshold adjustment
+- Process output buffering
+- Large file handling
+- UI noise reduction
+
+* Troubleshooting
+
+** LSP Server Not Starting
+- Verify language server is installed (e.g., clangd for C/C++)
+- Check if server is in PATH
+- Ensure eglot-ensure is called for the major mode
+- Check server program configuration in eglot-server-programs
+
+** Completion Not Working
+- Verify Corfu is enabled globally
+- Check if LSP server is properly connected
+- Ensure major mode hooks are set up correctly
+- Confirm Orderless configuration is loaded
+
+** Performance Issues
+- Monitor GC threshold settings
+- Check large file optimizations
+- Verify process output buffer settings
+- Review Eglot performance settings
+
+** Terminal Compatibility
+- Ensure corfu-terminal is loaded
+- Check if terminal supports required features
+- Verify configuration works in -nw mode

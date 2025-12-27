@@ -1,70 +1,72 @@
-;;; lsp-perf.el --- Performance optimizations for LSP and Corfu -*- lexical-binding: t -*-
+;;; lsp-perf.el --- Performance optimizations for Eglot & Corfu -*- lexical-binding: t -*-
 
 ;;; Commentary:
-;; Performance optimizations for LSP and Corfu systems
+;; Practical performance enhancements tailored for:
+;;  - Eglot (Emacs 29+)
+;;  - Corfu based completion workflow
+;;
+;; Safe, modern, and minimal.
 
 ;;; Code:
 
-;; Performance tuning for LSP
-(defcustom my/lsp-performance-settings
-  '((gc-cons-threshold . 100000000)        ;; 100MB during LSP processing
-    (read-process-output-max . 1048576)    ;; 1MB for process output
-    (lsp-completion-provider . :capf)      ;; Use Corfu for completion
-    (lsp-idle-delay . 0.5)                 ;; Delay before lsp triggers
-    (lsp-enable-links . nil)               ;; Disable links for performance
-    (lsp-enable-folding . nil)             ;; Disable folding for performance
-    (lsp-log-io . nil)                     ;; Disable logging for performance
-    (lsp-restart . 'ignore)                ;; Don't restart automatically
-    (lsp-headerline-breadcrumb-enable . nil) ;; Disable breadcrumb for performance
-    (lsp-modeline-code-actions-enable . nil) ;; Disable modeline code actions
-    (lsp-modeline-diagnostics-enable . nil)  ;; Disable modeline diagnostics
-    (lsp-signature-auto-activate . nil))   ;; Disable signature help
-  "Performance settings for LSP.")
+;; =========================
+;; GC + IO Performance
+;; =========================
+(setq gc-cons-threshold (* 200 1024 1024))  ;; 200MB
+(setq read-process-output-max (* 4 1024 1024)) ;; 4MB improves LSP throughput
 
-;; Performance tuning for Corfu
-(defcustom my/corfu-performance-settings
-  '((corfu-auto-delay . 0.1)               ;; Short delay for auto completion
-    (corfu-popupinfo-delay . 0.2)          ;; Delay for popup info
-    (corfu-count . 10)                     ;; Limit number of candidates
-    (corfu-max-width . 60)                 ;; Limit width of candidates
-    (corfu-scroll-margin . 3))             ;; Reduce scroll margin
-  "Performance settings for Corfu.")
+;; =========================
+;; Eglot Performance
+;; =========================
+(with-eval-after-load 'eglot
+  ;; Do NOT spam minibuffer
+  (setq eglot-events-buffer-size 0)
 
-;; Apply performance settings when entering prog-mode
-(defun my/apply-lsp-performance-settings ()
-  "Apply performance settings when LSP is active."
-  (dolist (setting my/lsp-performance-settings)
-    (set (car setting) (cdr setting))))
+  ;; Disable too-aggressive diagnostics refresh
+  (setq eglot-report-progress nil)
 
-(defun my/reset-lsp-performance-settings ()
-  "Reset performance settings when LSP is inactive."
-  (setq gc-cons-threshold (* 100 1024 1024))  ;; Back to 100MB
-  (setq read-process-output-max (* 1024 1024))) ;; Back to 1MB
+  ;; Don't watch insane number of files
+  (setq eglot-sync-connect nil) ;; async startup = faster UI
+)
 
-;; Optimize file watching for large projects
-(setq lsp-file-watch-threshold 10000)  ;; Increase file watch threshold
+;; =========================
+;; Completion Performance
+;; =========================
+(setq completion-ignore-case t)
+(setq read-buffer-completion-ignore-case t)
+(setq read-file-name-completion-ignore-case t)
 
-;; Optimize completion performance
-(setq completion-cycle-threshold 3)            ;; Cycle after 3 completions
-(setq tab-always-indent 'complete)             ;; Tab for completion
+;; Corfu performance tuning
+(with-eval-after-load 'corfu
+  (setq corfu-auto-delay 0.08)
+  (setq corfu-auto-prefix 1)
+  (setq corfu-popupinfo-delay '(0.4 . 0.1)))
 
-;; Performance hooks
-(add-hook 'lsp-mode-hook 'my/apply-lsp-performance-settings)
-(add-hook 'lsp-mode-disable-hook 'my/reset-lsp-performance-settings)
+;; =========================
+;; Large File Optimizer
+;; =========================
+(defun my/large-file-optimizations ()
+  "Apply optimizations for large files."
+  (when (> (buffer-size) (* 2 1024 1024)) ;; > 2MB
+    (setq-local gc-cons-threshold (* 400 1024 1024))
+    (setq-local bidi-display-reordering nil)
+    (setq-local bidi-paragraph-direction 'left-to-right)
+    (when (fboundp 'so-long-mode)
+      (so-long-mode 1))
+    (when (fboundp 'display-line-numbers-mode)
+      (display-line-numbers-mode -1))))
 
-;; Throttle expensive operations
-(defun my/throttle-expensive-operations ()
-  "Throttle expensive operations in large buffers."
-  (when (> (buffer-size) (* 1000 1000))  ;; 1MB
-    ;; Reduce syntax highlighting
-    (font-lock-mode -1)
-    ;; Disable line numbers in large files
-    (display-line-numbers-mode -1)
-    ;; Reduce fringe indicators
-    (setq indicate-empty-lines nil)
-    (setq indicate-buffer-boundaries nil)))
+(add-hook 'find-file-hook #'my/large-file-optimizations)
 
-(add-hook 'find-file-hook 'my/throttle-expensive-operations)
+;; =========================
+;; UI Noise Reduction
+;; =========================
+(setq mode-line-compact t)
+
+;; =========================
+;; TRAMP (remote file) performance
+;; =========================
+(setq remote-file-name-inhibit-locks t)
 
 (provide 'lsp-perf)
 ;;; lsp-perf.el ends here

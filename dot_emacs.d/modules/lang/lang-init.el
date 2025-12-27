@@ -5,23 +5,21 @@
 
 ;;; Code:
 
-;; Web development
-(defun my/web-mode-setup ()
-  "Setup for web-mode."
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-code-indent-offset 2)
-  (setq web-mode-enable-auto-quoting nil)
-  (setq web-mode-enable-auto-pairing nil))
+;; JavaScript configuration
+(require 'js-config)
 
-(add-hook 'web-mode-hook 'my/web-mode-setup)
+;; TypeScript configuration
+(require 'ts-config)
 
-;; JavaScript
-(defun my/js-mode-setup ()
-  "Setup for js-mode."
-  (setq js-indent-level 2))
+;; TSX mode configuration
+(require 'tsx-mode-config)
 
-(add-hook 'js-mode-hook 'my/js-mode-setup)
+;; React/JSX configuration
+(require 'jsx-config)
+(require 'react-config)
+
+;; CSS/Tailwind configuration
+(require 'css-config)
 
 ;; Python
 (defun my/python-mode-setup ()
@@ -45,6 +43,9 @@
   (setq rust-format-on-save t))
 
 (add-hook 'rust-mode-hook 'my/rust-mode-setup)
+
+;; Org mode configuration
+(require 'org-config)
 
 ;; Disable syntax highlighting in large files for performance
 (defun my/disable-syntax-highlighting-if-large ()

@@ -53,7 +53,7 @@
   
   ;; Region highlight (if face exists)
   (when (facep 'region)
-    (set-face-background 'region "#585b7080" nil)) ; Catppuccin surface2 with transparency
+    (set-face-background 'region "#585b70" nil)) ; Catppuccin surface2
   
   ;; Make minibuffer background transparent (if face exists)
   (when (facep 'minibuffer-prompt)

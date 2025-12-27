@@ -1,57 +1,40 @@
-;;; eglot-c.el --- Optimized Eglot config for C/C++ -*- lexical-binding: t -*-
+;;; eglot-java.el --- Eglot config for Java -*- lexical-binding: t -*-
 
 ;;; Commentary:
-;; Reliable + performant eglot setup for C & C++ using clangd
+;; Eglot setup for Java development using jdtls
 
 ;;; Code:
 
 (use-package eglot
   :ensure t
   :hook
-  ((c-mode c++-mode) . eglot-ensure)
-
+  ((java-mode) . eglot-ensure)   ;; 自动启用 Eglot
   :config
   ;; -----------------------------
-  ;; Detect clangd
+  ;; LSP server setup
   ;; -----------------------------
-  (if (executable-find "clangd")
+  (if (executable-find "jdtls")
       (progn
-        (message "[Eglot] Using clangd")
-
-        ;; 避免重复添加
-        (add-to-list
-         'eglot-server-programs
-         '((c-mode c++-mode)
-           .
-           ("clangd"
-            "--background-index"
-            "--clang-tidy"
-            "--completion-style=detailed"
-            "--header-insertion=never"
-            "--fallback-style=llvm"
-            "--suggest-missing-includes"
-            "--log=error"))))
-    (message "[Eglot] clangd NOT FOUND! Please install clangd."))
+        (message "[Eglot] Using jdtls for Java")
+        (add-to-list 'eglot-server-programs
+                     '(java-mode . ("jdtls"))))
+    (message "[Eglot] jdtls NOT FOUND! Please install jdtls."))
 
   ;; -----------------------------
   ;; QoL tweaks
   ;; -----------------------------
   (add-hook 'eglot-managed-mode-hook
             (lambda ()
-              ;; 语义高亮（Emacs29+）
+              ;; inlay hints (Emacs29+)
               (when (fboundp 'eglot-inlay-hints-mode)
                 (eglot-inlay-hints-mode 1))
-
+              ;; 自动关闭
+              (setq-local eglot-autoshutdown t)
               ;; 避免阻塞
               (setq-local eglot-sync-connect nil)
-
-              ;; 自动重启
-              (setq-local eglot-autoshutdown t)
-
               ;; xref 支持
               (setq-local eglot-extend-to-xref t)
-
-              ;; 如需保存自动格式化，放开：
+              ;; 保存时自动格式化（可选）
               ;; (add-hook 'before-save-hook #'eglot-format-buffer -10 t)
               )))
 
@@ -66,5 +49,5 @@
   (define-key eglot-mode-map (kbd "C-c a") 'eglot-code-actions)
   (define-key eglot-mode-map (kbd "C-c f") 'eglot-format-buffer))
 
-(provide 'eglot-c)
-;;; eglot-c.el ends here
+(provide 'eglot-java)
+;;; eglot-java.el ends here

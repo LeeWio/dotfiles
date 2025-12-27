@@ -63,9 +63,8 @@
 (setq show-paren-delay 0)
 (setq show-paren-style 'mixed)
 
-;; File associations
-(add-to-list 'auto-mode-alist '("\\.log\\'" . text-mode))
-(add-to-list 'auto-mode-alist '("COMMIT_EDITMSG\\'" . text-mode))
+;; File type associations
+(require 'file-associations)
 
 ;; Disable bidirectional text rendering for performance
 (setq bidi-display-reordering 'left-to-right)

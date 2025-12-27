@@ -1,0 +1,123 @@
+#+TITLE: Language Support Module Documentation
+#+AUTHOR: Emacs Configuration
+#+DATE: 2025-12-24
+
+* Language Support Module Overview
+
+The Language Support module provides configurations for various programming languages to enhance the development experience. It includes language-specific settings and performance optimizations for handling large files.
+
+* Components
+
+** lang-init.el
+Initialization file that sets up configurations for multiple programming languages.
+
+* Supported Languages
+
+** Web Development (web-mode)
+Configuration for HTML, CSS, and JavaScript in web files.
+
+*** Features
+- 2-space indentation for markup, CSS, and code
+- Auto-quoting disabled for better performance
+- Auto-pairing disabled for better performance
+
+*** Customization Options
+- ~web-mode-markup-indent-offset~ - Indentation for HTML markup (2 spaces)
+- ~web-mode-css-indent-offset~ - Indentation for CSS (2 spaces)
+- ~web-mode-code-indent-offset~ - Indentation for embedded code (2 spaces)
+- ~web-mode-enable-auto-quoting~ - Auto-quoting of attributes (disabled)
+- ~web-mode-enable-auto-pairing~ - Auto-pairing of delimiters (disabled)
+
+** JavaScript (js-mode)
+Configuration for JavaScript development.
+
+*** Features
+- 2-space indentation
+- Language-specific settings
+
+*** Customization Options
+- ~js-indent-level~ - Indentation level (2 spaces)
+
+** Python
+Configuration for Python development.
+
+*** Features
+- Python 3 as default interpreter
+- 4-space indentation (standard Python style)
+
+*** Customization Options
+- ~python-shell-interpreter~ - Python interpreter (python3)
+- ~python-indent-offset~ - Indentation offset (4 spaces)
+
+** Go
+Configuration for Go development.
+
+*** Features
+- goimports as default formatter
+- Auto-format on save
+
+*** Customization Options
+- ~gofmt-command~ - Go formatting command (goimports)
+- Auto-format enabled on save
+
+** Rust
+Configuration for Rust development.
+
+*** Features
+- Auto-format on save
+
+*** Customization Options
+- ~rust-format-on-save~ - Enable formatting on save (true)
+
+* Performance Optimizations
+
+** Large File Handling
+The module includes performance optimizations for large files to prevent Emacs from becoming unresponsive.
+
+*** Features
+- Disables syntax highlighting for files larger than 1MB
+- Prevents performance degradation when working with large files
+- Maintains basic functionality while optimizing resource usage
+
+*** Implementation
+- ~my/disable-syntax-highlighting-if-large~ function checks file size
+- Applies to files larger than 1,000,000 bytes (1MB)
+- Disables JIT lock mode for large files
+- Preserves basic syntax table functionality
+
+* Hooks and Integration
+
+The module uses Emacs hooks to apply language-specific configurations automatically:
+- ~web-mode-hook~ - Applied when web-mode is activated
+- ~js-mode-hook~ - Applied when js-mode is activated
+- ~python-mode-hook~ - Applied when python-mode is activated
+- ~go-mode-hook~ - Applied when go-mode is activated
+- ~rust-mode-hook~ - Applied when rust-mode is activated
+- ~find-file-hook~ - Applied when files are opened
+
+* Customization
+
+Each language configuration can be customized by modifying the corresponding setup function:
+- ~my/web-mode-setup~ - Web mode configuration
+- ~my/js-mode-setup~ - JavaScript mode configuration
+- ~my/python-mode-setup~ - Python mode configuration
+- ~my/go-mode-setup~ - Go mode configuration
+- ~my/rust-mode-setup~ - Rust mode configuration
+- ~my/disable-syntax-highlighting-if-large~ - Large file optimization
+
+* Troubleshooting
+
+** Language Mode Not Activating
+- Verify that the appropriate major mode is loaded for the file type
+- Check if file extensions are properly associated with language modes
+- Ensure hooks are properly added
+
+** Indentation Issues
+- Check language-specific indentation settings
+- Verify that mode-specific settings override general settings
+- Confirm that indentation level is appropriate for the language
+
+** Performance Problems with Large Files
+- Ensure large file optimization is working
+- Verify that syntax highlighting is disabled for large files
+- Check if file size threshold is appropriate

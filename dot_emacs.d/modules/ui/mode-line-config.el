@@ -5,6 +5,10 @@
 
 ;;; Code:
 
+;; Install and configure nerd-icons for mode line
+(use-package nerd-icons
+  :ensure t)
+
 ;; Editor color palette (Catppuccin Mocha)
 (defconst my/editor-colors
   '((background    . "#1e1e2e")    ; Catppuccin base
@@ -26,68 +30,70 @@
   "Get editor COLOR-NAME."
   (cdr (assoc color-name my/editor-colors)))
 
-;; File type icons with clearer representations
+;; File type icons with nerd-icons
 (defun my/file-icon (filename)
-  "Get file icon for FILENAME with better visual representation."
-  (let ((ext (and filename (downcase (file-name-extension filename)))))
-    (cond
-     ;; Programming languages
-     ((member ext '("el" "lisp")) "𝛌")      ; Lambda for Lisp
-     ((member ext '("js" "jsx")) "🅹")       ; J for JavaScript
-     ((member ext '("ts" "tsx")) "🆃")       ; T for TypeScript
-     ((member ext '("py")) "🐍")             ; Snake for Python
-     ((member ext '("html" "htm")) "🅷")     ; H for HTML
-     ((member ext '("css" "scss" "sass")) "🅲") ; C for CSS
-     ((member ext '("json")) "{ }")          ; Brackets for JSON
-     ((member ext '("md" "markdown")) "🅼")  ; M for Markdown
-     ((member ext '("java")) "☕")           ; Coffee for Java
-     ((member ext '("c" "cpp" "h" "hpp")) "🅒") ; C for C/C++
-     ((member ext '("php")) "🅟")            ; P for PHP
-     ((member ext '("rb")) "🅡")             ; R for Ruby
-     ((member ext '("go")) "🅶")             ; G for Go
-     ((member ext '("rs")) "🆁")             ; R for Rust
-     
-     ;; Configuration
-     ((member ext '("yaml" "yml")) "🅨")    ; Y for YAML
-     ((member ext '("xml")) "🅨")            ; Y for XML
-     ((member ext '("toml")) "🅣")           ; T for TOML
-     ((member ext '("conf" "cfg")) "⚙")     ; Gear for config
-     
-     ;; Documentation
-     ((member ext '("txt" "text")) "🅣")    ; T for Text
-     ((member ext '("org")) "Ⓞ")            ; O for Org
-     ((member ext '("pdf")) "🅟")            ; P for PDF
-     ((member ext '("tex")) "🅛")            ; L for LaTeX
-     
-     ;; Media
-     ((member ext '("jpg" "jpeg" "png" "gif" "bmp" "svg")) "🖼") ; Image
-     ((member ext '("mp3" "wav" "ogg" "flac")) "🎵")            ; Music
-     ((member ext '("mp4" "avi" "mov" "mkv")) "🎬")             ; Movie
-     
-     ;; Archives
-     ((member ext '("zip" "tar" "gz" "rar" "7z")) "📦")        ; Package
-     
-     ;; Scripts
-     ((member ext '("sh" "bash" "zsh")) "$")                   ; Dollar for shell
-     
-     ;; Default file icon
-     (filename "📄")  ; Generic file
-     (t "📝"))))     ; Buffer (no file)
+  "Get file icon for FILENAME with nerd-icons."
+  (when (require 'nerd-icons nil t)
+    (let ((ext (and filename (downcase (file-name-extension filename)))))
+      (cond
+       ;; Programming languages
+       ((member ext '("el" "lisp")) (nerd-icons-codicon "nf-cod-symbol-constructor" :face 'nerd-icons-purple))
+       ((member ext '("js" "jsx")) (nerd-icons-devicon "nf-dev-javascript" :face 'nerd-icons-yellow))
+       ((member ext '("ts" "tsx")) (nerd-icons-devicon "nf-dev-typescript" :face 'nerd-icons-blue))
+       ((member ext '("py")) (nerd-icons-devicon "nf-dev-python" :face 'nerd-icons-red))
+       ((member ext '("html" "htm")) (nerd-icons-devicon "nf-dev-html5" :face 'nerd-icons-orange))
+       ((member ext '("css" "scss" "sass")) (nerd-icons-devicon "nf-dev-css3" :face 'nerd-icons-blue))
+       ((member ext '("json")) (nerd-icons-codicon "nf-cod-json" :face 'nerd-icons-yellow))
+       ((member ext '("md" "markdown")) (nerd-icons-mdicon "nf-md-file_document" :face 'nerd-icons-blue))
+       ((member ext '("java")) (nerd-icons-devicon "nf-dev-java" :face 'nerd-icons-purple))
+       ((member ext '("c" "cpp" "h" "hpp")) (nerd-icons-devicon "nf-dev-c" :face 'nerd-icons-blue))
+       ((member ext '("php")) (nerd-icons-devicon "nf-dev-php" :face 'nerd-icons-purple))
+       ((member ext '("rb")) (nerd-icons-devicon "nf-dev-ruby" :face 'nerd-icons-red))
+       ((member ext '("go")) (nerd-icons-devicon "nf-dev-go" :face 'nerd-icons-blue))
+       ((member ext '("rs")) (nerd-icons-devicon "nf-dev-rust" :face 'nerd-icons-orange))
+       
+       ;; Configuration
+       ((member ext '("yaml" "yml")) (nerd-icons-codicon "nf-cod-settings" :face 'nerd-icons-yellow))
+       ((member ext '("xml")) (nerd-icons-devicon "nf-dev-xml" :face 'nerd-icons-red))
+       ((member ext '("toml")) (nerd-icons-codicon "nf-cod-settings" :face 'nerd-icons-purple))
+       ((member ext '("conf" "cfg")) (nerd-icons-codicon "nf-cod-settings" :face 'nerd-icons-orange))
+       
+       ;; Documentation
+       ((member ext '("txt" "text")) (nerd-icons-faicon "nf-fa-file_text_o" :face 'nerd-icons-green))
+       ((member ext '("org")) (nerd-icons-faicon "nf-fa-list_alt" :face 'nerd-icons-purple))
+       ((member ext '("pdf")) (nerd-icons-codicon "nf-cod-file_pdf" :face 'nerd-icons-red))
+       ((member ext '("tex")) (nerd-icons-faicon "nf-fa-file_text" :face 'nerd-icons-yellow))
+       
+       ;; Media
+       ((member ext '("jpg" "jpeg" "png" "gif" "bmp" "svg")) (nerd-icons-faicon "nf-fa-file_image_o" :face 'nerd-icons-green))
+       ((member ext '("mp3" "wav" "ogg" "flac")) (nerd-icons-faicon "nf-fa-file_audio_o" :face 'nerd-icons-green))
+       ((member ext '("mp4" "avi" "mov" "mkv")) (nerd-icons-faicon "nf-fa-file_video_o" :face 'nerd-icons-green))
+       
+       ;; Archives
+       ((member ext '("zip" "tar" "gz" "rar" "7z")) (nerd-icons-faicon "nf-fa-file_archive_o" :face 'nerd-icons-orange))
+       
+       ;; Scripts
+       ((member ext '("sh" "bash" "zsh")) (nerd-icons-devicon "nf-dev-terminal" :face 'nerd-icons-purple))
+       
+       ;; Default file icon
+       (filename (nerd-icons-faicon "nf-fa-file_o" :face 'nerd-icons-blue))
+       (t (nerd-icons-faicon "nf-fa-file" :face 'nerd-icons-blue))))))
 
-;; Mode icons
+;; Mode icons with nerd-icons
 (defun my/mode-icon (mode)
-  "Get icon for MODE."
-  (cond
-   ((eq mode 'dired-mode) "📁")      ; Folder
-   ((eq mode 'org-mode) "Ⓞ")         ; Org
-   ((eq mode 'python-mode) "🐍")     ; Python
-   ((eq mode 'js-mode) "🅹")          ; JavaScript
-   ((eq mode 'typescript-mode) "🆃")  ; TypeScript
-   ((eq mode 'html-mode) "🅷")        ; HTML
-   ((eq mode 'css-mode) "🅲")         ; CSS
-   ((eq mode 'text-mode) "🆃")        ; Text
-   ((eq mode 'fundamental-mode) "📄") ; Basic
-   (t "📄")))                         ; Default
+  "Get icon for MODE with nerd-icons."
+  (when (require 'nerd-icons nil t)
+    (cond
+     ((eq mode 'dired-mode) (nerd-icons-faicon "nf-fa-folder_o" :face 'nerd-icons-orange))  ; Folder
+     ((eq mode 'org-mode) (nerd-icons-faicon "nf-fa-list_alt" :face 'nerd-icons-purple))    ; Org
+     ((eq mode 'python-mode) (nerd-icons-devicon "nf-dev-python" :face 'nerd-icons-red))    ; Python
+     ((eq mode 'js-mode) (nerd-icons-devicon "nf-dev-javascript" :face 'nerd-icons-yellow)) ; JavaScript
+     ((eq mode 'typescript-mode) (nerd-icons-devicon "nf-dev-typescript" :face 'nerd-icons-blue)) ; TypeScript
+     ((eq mode 'html-mode) (nerd-icons-devicon "nf-dev-html5" :face 'nerd-icons-orange))    ; HTML
+     ((eq mode 'css-mode) (nerd-icons-devicon "nf-dev-css3" :face 'nerd-icons-blue))        ; CSS
+     ((eq mode 'text-mode) (nerd-icons-faicon "nf-fa-file_text_o" :face 'nerd-icons-green)) ; Text
+     ((eq mode 'fundamental-mode) (nerd-icons-faicon "nf-fa-file_o" :face 'nerd-icons-blue)) ; Basic
+     (t (nerd-icons-faicon "nf-fa-file_o" :face 'nerd-icons-blue)))))                      ; Default
 
 ;; Custom mode line faces - clean VS Code style
 (set-face-attribute 'mode-line nil
